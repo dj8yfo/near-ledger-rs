@@ -28,6 +28,10 @@ name = "sign_transfer"
 path = "examples/sign_transaction/transfer.rs"
 
 [[example]]
+name = "sign_batch_all_actions"
+path = "examples/sign_transaction/batch_all_actions.rs"
+
+[[example]]
 name = "sign_multiple_transfers"
 path = "examples/sign_transaction/multiple_transfers.rs"
 
