@@ -256,7 +256,10 @@ where
     env_logger::builder().init();
     let hd_path = BIP32Path::from_str("44'/397'/0'/0'/1'").unwrap();
 
+    #[cfg(not(feature = "speculos"))]
     let ledger_pub_key = near_ledger::get_public_key_with_display_flag(hd_path.clone(), false)?;
+    #[cfg(feature = "speculos")]
+    let ledger_pub_key = static_speculos_public_key();
     display_pub_key(ledger_pub_key);
 
     let unsigned_transaction = f_transaction(ledger_pub_key);
@@ -267,4 +270,10 @@ where
     display_and_verify_signature(bytes, signature_bytes, ledger_pub_key);
 
     Ok(())
+}
+
+#[cfg(feature = "speculos")]
+fn static_speculos_public_key() -> ed25519_dalek::PublicKey {
+    let bytes = hex::decode("c4f5941e81e071c2fd1dae2e71fd3d859d462484391d9a90bf219211dcbb320f").unwrap();
+    ed25519_dalek::PublicKey::from_bytes(bytes.as_ref()).unwrap()
 }

@@ -106,3 +106,7 @@ env_logger = "0.10.0"
 near-crypto = "0.20.0"
 near-primitives = "0.20.0"
 near-account-id = { version = "1.0.0", features = ["internal_unstable"]}
+
+[features]
+default = ["speculos"]
+speculos = []
