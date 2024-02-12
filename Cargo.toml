@@ -108,5 +108,6 @@ near-primitives = "0.20.0"
 near-account-id = { version = "1.0.0", features = ["internal_unstable"]}
 
 [features]
-default = ["speculos"]
+default = ["speculos", "display_only"]
 speculos = []
+display_only = []
