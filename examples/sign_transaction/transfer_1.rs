@@ -3,10 +3,14 @@ use near_ledger::NEARLedgerError;
 #[path = "../common/lib.rs"]
 mod common;
 
+const ONE_NEAR: u128 = 10_u128.pow(24);
+
 fn tx(ledger_pub_key: ed25519_dalek::PublicKey) -> near_primitives::transaction::Transaction {
     let mut tx = common::tx_template(ledger_pub_key);
-    tx.actions = vec![near_primitives::transaction::Action::CreateAccount(
-        near_primitives::transaction::CreateAccountAction {},
+    tx.actions = vec![near_primitives::transaction::Action::Transfer(
+        near_primitives::transaction::TransferAction {
+            deposit: 1_000_000 * ONE_NEAR, // 1 yoctoNEAR
+        },
     )];
     tx
 }
@@ -18,6 +22,6 @@ fn main() -> Result<(), NEARLedgerError> {
 
 #[cfg(feature = "speculos")]
 fn main() -> Result<(), NEARLedgerError> {
-    let expected = hex::decode("a2c1efe9c020858eb7429b8430b126059d6a6a0f1f2ec56b2364250d999aefa4b5c7ca957e652078cc94d2e02dce95de2d95b5d7867261d77ca2c8987d7ae209").unwrap();
+    let expected = hex::decode("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000").unwrap();
     common::get_key_sign_and_verify_flow(tx, expected)
 }

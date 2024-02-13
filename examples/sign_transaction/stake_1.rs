@@ -4,6 +4,8 @@ use near_ledger::NEARLedgerError;
 #[path = "../common/lib.rs"]
 mod common;
 
+const ONE_NEAR: u128 = 10_u128.pow(24);
+
 fn tx(ledger_pub_key: ed25519_dalek::PublicKey) -> near_primitives::transaction::Transaction {
     let mut tx = common::tx_template(ledger_pub_key.clone());
     let sk = SecretKey::from_seed(
@@ -11,8 +13,11 @@ fn tx(ledger_pub_key: ed25519_dalek::PublicKey) -> near_primitives::transaction:
         &format!("{:?}", ledger_pub_key),
     );
     let public_key = sk.public_key();
-    tx.actions = vec![near_primitives::transaction::Action::DeleteKey(Box::new(
-        near_primitives::transaction::DeleteKeyAction { public_key },
+    tx.actions = vec![near_primitives::transaction::Action::Stake(Box::new(
+        near_primitives::transaction::StakeAction {
+            stake: 1_000_000 * ONE_NEAR, // 1M NEAR,
+            public_key,
+        },
     ))];
     tx
 }
@@ -24,6 +29,6 @@ fn main() -> Result<(), NEARLedgerError> {
 
 #[cfg(feature = "speculos")]
 fn main() -> Result<(), NEARLedgerError> {
-    let expected = hex::decode("6b412a1b34e3e6c799e9d58db2acb99e1b38457157449824da5ad599a5ed96cd5388116058991d4539dc630513751ce8d10b126ee5d0a7a9c62bf54853b56502").unwrap();
+    let expected = hex::decode("02f7cdb55e55b8a7efe9d87b6a7971b4fc816c2a1e17262a544a12a599789d1e457fb40bef286f9dcaf709f751e7869a19fcccec9b2156e293ee1f6595a23406").unwrap();
     common::get_key_sign_and_verify_flow(tx, expected)
 }

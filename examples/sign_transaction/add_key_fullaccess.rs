@@ -23,6 +23,14 @@ fn tx(ledger_pub_key: ed25519_dalek::PublicKey) -> near_primitives::transaction:
     tx
 }
 
+#[cfg(not(feature = "speculos"))]
 fn main() -> Result<(), NEARLedgerError> {
     common::get_key_sign_and_verify_flow(tx)
 }
+
+#[cfg(feature = "speculos")]
+fn main() -> Result<(), NEARLedgerError> {
+    let expected = hex::decode("29c5b77982cc05ec949c4d6f8fc795679eaf2830dee89a3d101901e133cca2f4ecfc7592b7a285960ecece9daee767fef1251c84e502a6dbce4b3b63808de804").unwrap();
+    common::get_key_sign_and_verify_flow(tx, expected)
+}
+

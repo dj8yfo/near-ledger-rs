@@ -39,6 +39,7 @@ pub fn display_and_verify_signature(
     log::info!("---");
 }
 
+#[cfg(not(feature = "speculos"))]
 fn main() -> Result<(), NEARLedgerError> {
     env_logger::builder().init();
 
@@ -54,6 +55,33 @@ fn main() -> Result<(), NEARLedgerError> {
     };
 
     let signature_bytes = near_ledger::sign_message_nep413(&msg, hd_path)?;
+
+    display_and_verify_signature(&msg, signature_bytes, public_key);
+
+    Ok(())
+}
+
+#[cfg(feature = "speculos")]
+fn main() -> Result<(), NEARLedgerError> {
+    use common::static_speculos_public_key;
+
+    env_logger::builder().init();
+
+    let hd_path = BIP32Path::from_str("44'/397'/0'/0'/1'").unwrap();
+    let public_key = static_speculos_public_key();
+    display_pub_key(public_key);
+
+    let msg = NEP413Payload {
+        messsage: "Makes it possible to authenticate users without having to add new access keys. This will improve UX, save money and will not increase the on-chain storage of the users' accounts./Makes it possible to authenticate users without having to add new access keys. This will improve UX, save money and will not increase the on-chain storage of the users' accounts./Makes it possible to authenticate users without having to add new access keys. This will improve UX, save money and will not increase the on-chain storage of the users' accounts.".to_string(),
+        nonce: [42; 32],
+        recipient: "alice.near".to_string(),
+        callback_url: Some("myapp.com/callback".to_string()) 
+    };
+
+    log::info!("{:#?}", msg);
+
+    let _signature_bytes = near_ledger::sign_message_nep413(&msg, hd_path)?;
+    let signature_bytes = hex::decode("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000").unwrap();
 
     display_and_verify_signature(&msg, signature_bytes, public_key);
 

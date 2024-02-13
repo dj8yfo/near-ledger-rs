@@ -25,10 +25,14 @@ fn main() -> Result<(), NEARLedgerError> {
 
     let sender_id = AccountId::from_str("bob.near").unwrap();
 
-    let actions = common::batch_of_all_types_of_actions(ledger_pub_key)
-        .into_iter()
-        .map(|action| action.try_into().unwrap())
-        .collect::<Vec<_>>();
+    let actions = vec![near_primitives::transaction::Action::Transfer(
+        near_primitives::transaction::TransferAction {
+            deposit: 150000000000000000000000, // 0.15 NEAR
+        },
+    )]
+    .into_iter()
+    .map(|action| action.try_into().unwrap())
+    .collect::<Vec<_>>();
 
     let ledger_pub_key = near_crypto::PublicKey::ED25519(near_crypto::ED25519PublicKey::from(
         ledger_pub_key.to_bytes(),
@@ -47,9 +51,8 @@ fn main() -> Result<(), NEARLedgerError> {
     #[allow(unused)]
     let signature_bytes =
         near_ledger::sign_message_nep366_delegate_action(&delegate_action, hd_path)?;
-
     #[cfg(feature = "speculos")]
-    let signature_bytes = hex::decode("3f671b1d2ba42132e78c39dad35848ef0ee67858d85bd63cb1ce9e03d629c74cec9529add083aa0de6dbd45d372baa67bd8f8e49e76297a87cec1dc7084ae80d").unwrap();
+    let signature_bytes = hex::decode("c6645407278a472641350472fc83eb8002ef961ecf67102df5976adb5a071208db7309975dc0a56f7c5b604ea45ccfdf3d0a78be221c4afcee6aae03d394690c").unwrap();
 
     let signature = Signature::from_parts(near_crypto::KeyType::ED25519, &signature_bytes).unwrap();
 
@@ -57,6 +60,7 @@ fn main() -> Result<(), NEARLedgerError> {
         delegate_action,
         signature,
     };
+    log::info!("{:#?}", signed_delegate);
     assert!(signed_delegate.verify());
 
     common::display_signature(signature_bytes);

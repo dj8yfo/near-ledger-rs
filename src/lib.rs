@@ -397,6 +397,7 @@ pub fn sign_message_nep413(
     payload: &NEP413Payload,
     seed_phrase_hd_path: slip10::BIP32Path,
 ) -> Result<SignatureBytes, NEARLedgerError> {
+    #[cfg(not(feature = "display_only"))]
     let transport = get_transport()?;
     // seed_phrase_hd_path must be converted into bytes to be sent as `data` to the Ledger
     let hd_path_bytes = hd_path_to_bytes(&seed_phrase_hd_path);
@@ -422,6 +423,7 @@ pub fn sign_message_nep413(
             data: chunk.to_vec(),
         };
         log_command(i, is_last_chunk, &command);
+        #[cfg(not(feature = "display_only"))]
         match transport.exchange(&command) {
             Ok(response) => {
                 log::info!(
@@ -446,15 +448,20 @@ pub fn sign_message_nep413(
             Err(err) => return Err(NEARLedgerError::LedgerHIDError(err)),
         };
     }
-    Err(NEARLedgerError::APDUExchangeError(
+    #[cfg(feature = "display_only")]
+    let result = Ok(core::iter::repeat(0u8).take(64).collect::<Vec<_>>());
+    #[cfg(not(feature = "display_only"))]
+    let result = Err(NEARLedgerError::APDUExchangeError(
         "Unable to process request".to_owned(),
-    ))
+    ));
+    result
 }
 
 pub fn sign_message_nep366_delegate_action(
     payload: &DelegateAction,
     seed_phrase_hd_path: slip10::BIP32Path,
 ) -> Result<SignatureBytes, NEARLedgerError> {
+    #[cfg(not(feature = "display_only"))]
     let transport = get_transport()?;
     // seed_phrase_hd_path must be converted into bytes to be sent as `data` to the Ledger
     let hd_path_bytes = hd_path_to_bytes(&seed_phrase_hd_path);
@@ -480,6 +487,7 @@ pub fn sign_message_nep366_delegate_action(
             data: chunk.to_vec(),
         };
         log_command(i, is_last_chunk, &command);
+        #[cfg(not(feature = "display_only"))]
         match transport.exchange(&command) {
             Ok(response) => {
                 log::info!(
@@ -504,9 +512,13 @@ pub fn sign_message_nep366_delegate_action(
             Err(err) => return Err(NEARLedgerError::LedgerHIDError(err)),
         };
     }
-    Err(NEARLedgerError::APDUExchangeError(
+    #[cfg(feature = "display_only")]
+    let result = Ok(core::iter::repeat(0u8).take(64).collect::<Vec<_>>());
+    #[cfg(not(feature = "display_only"))]
+    let result = Err(NEARLedgerError::APDUExchangeError(
         "Unable to process request".to_owned(),
-    ))
+    ));
+    result
 }
 pub fn blind_sign_transaction(
     payload: CryptoHash,
