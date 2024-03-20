@@ -118,6 +118,8 @@ cargo run --example sign_add_key_fullaccess
 cargo run --example sign_add_key_functioncall
 cargo run --example sign_deploy_contract
 cargo run --example sign_functioncall_str
+cargo run --example sign_functioncall_str_newline
+cargo run --example sign_functioncall_str_ascii_subrange
 cargo run --example sign_functioncall_bin
 cargo run --example sign_functioncall_str_parse_err
 cargo run --example sign_batch_all_actions

@@ -76,6 +76,14 @@ name = "sign_functioncall_str"
 path = "examples/sign_transaction/functioncall_str.rs"
 
 [[example]]
+name = "sign_functioncall_str_newline"
+path = "examples/sign_transaction/functioncall_str_newline.rs"
+
+[[example]]
+name = "sign_functioncall_str_ascii_subrange"
+path = "examples/sign_transaction/functioncall_str_ascii_subrange.rs"
+
+[[example]]
 name = "sign_functioncall_amount_1"
 path = "examples/sign_transaction/functioncall_amount_1.rs"
 
