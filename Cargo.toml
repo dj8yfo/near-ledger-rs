@@ -84,6 +84,10 @@ name = "sign_functioncall_str_ascii_subrange"
 path = "examples/sign_transaction/functioncall_str_ascii_subrange.rs"
 
 [[example]]
+name = "sign_functioncall_utf8"
+path = "examples/sign_transaction/functioncall_utf8.rs"
+
+[[example]]
 name = "sign_functioncall_amount_1"
 path = "examples/sign_transaction/functioncall_amount_1.rs"
 
