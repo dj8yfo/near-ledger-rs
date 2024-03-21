@@ -20,7 +20,7 @@ fn tx(ledger_pub_key: ed25519_dalek::PublicKey) -> near_primitives::transaction:
     args.push('}');
 
     let f_call = FunctionCallAction {
-        method_name: "test_payload_with_newline".to_string(),
+        method_name: "test_payload_str_with_ascii_subrange".to_string(),
         args: args.as_bytes().to_vec(),
         gas: 127127122121,
         deposit: 150000000000000000000000, // 0.15 NEAR,
@@ -41,6 +41,6 @@ fn main() -> Result<(), NEARLedgerError> {
 
 #[cfg(feature = "speculos")]
 fn main() -> Result<(), NEARLedgerError> {
-    let expected = hex::decode("e53a9694b09b0470fe72eb0531793d70ac2d8f0bd54e12d353a91a70d1413b534bfc28feb5bb78ec57a7e13600442d3ef55ee9d0fc72de1519f3e7edc0eb5306").unwrap();
+    let expected = hex::decode("3e952a449a50a655c25e4ccad66e29f0e3f361805402e6687de19583eca37f5440570796c6efc9ccaf29261faf766e920f94f63491e480ddcf3994ebf5e2b706").unwrap();
     common::get_key_sign_and_verify_flow(tx, expected)
 }
